@@ -9,4 +9,5 @@ sell_type_keyboard = InlineKeyboardMarkup(inline_keyboard=[
      InlineKeyboardButton(text='Страховки', callback_data='insurance'),
      InlineKeyboardButton(text='Звонки', callback_data='client_calls')],
     [InlineKeyboardButton(text='Инвестиционное страхование жизни', callback_data='investition_insurance')],
+    [InlineKeyboardButton(text='Коробочное страхование', callback_data='box_insurance')],
     ])

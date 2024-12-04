@@ -4,9 +4,7 @@ from aiogram.types import Message, CallbackQuery
 from aiogram.fsm.state import State, StatesGroup
 from aiogram.fsm.context import FSMContext
 from  ..keyboards.statistic_keyboards import select_type_statistic, select_period
-from pydantic import  BaseModel, ValidationError
-from ..dao.functions.sells_functions import get_user_sells_statistic, get_all_sells_statistic
-from sqlalchemy.exc import IntegrityError
+from ..dao.functions.statistic_functions import get_user_sells_statistic, get_all_sells_statistic
 
 
 statistic_router = Router()
@@ -32,7 +30,7 @@ async def select_period_statistic(callback: CallbackQuery, state: FSMContext):
 async def get_statistic(callback: CallbackQuery, state: FSMContext):
     await state.update_data(period = callback.data)
     data = await state.get_data()
-    await state.clear()
+    
     result = ''
     if data['noun'] == 'self':
         result = await get_user_sells_statistic(int(data['period']), user_tg_id= str(callback.from_user.id))

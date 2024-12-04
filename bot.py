@@ -16,16 +16,16 @@ bot = Bot(token=TOKEN_BOT, default=DefaultBotProperties(parse_mode=ParseMode.HTM
 
 
 async def main() -> None:
-    try:
-        dp = Dispatcher()
+    
+    dp = Dispatcher()
 
-        dp.include_router(registrate_router)
-        dp.include_router(sell_router)
-        dp.include_router(statistic_router)
+    dp.include_router(registrate_router)
+    dp.include_router(sell_router)
+    dp.include_router(statistic_router)
 
-        await dp.start_polling(bot)
-    except KeyboardInterrupt:
-        print('Exit')
+    await dp.start_polling(bot)
+    
+
 
     
 logging.basicConfig(level=logging.INFO)

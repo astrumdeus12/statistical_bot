@@ -31,7 +31,9 @@ class Sells(Base):
     user_id : Mapped[int] = mapped_column(ForeignKey('users.tg_id'))
     
     credits : Mapped[int] = mapped_column(default=0)
+    credit_count : Mapped[int] = mapped_column(default=0)
     insurance : Mapped[int] = mapped_column(default=0)
+    box_insurance : Mapped[int] = mapped_column(default=0)
     credit_cards : Mapped[int] = mapped_column(default=0)
     deb_cards : Mapped[int] = mapped_column(default=0)
     investition_insurance : Mapped[int] = mapped_column(default=0)
