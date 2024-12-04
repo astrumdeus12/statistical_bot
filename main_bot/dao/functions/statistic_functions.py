@@ -123,15 +123,19 @@ async def get_all_sells_statistic(days:int):
                         result['total_credit_count'] = counts.total_credit_count
                     else:
                         result['total_credit_count'] = 0
-                    
+                result['premium'] = await count_premium(result)
                 results.append(result)
                 
+            sorted_users = sorted(results, key = lambda x: x['premium'], reverse=True)
             
+            for rank, user in enumerate(sorted_users, start=1):
+                user['rank'] = rank
+                
+                
             result_answer = ''
-            for result in results:
-                result_answer += f'''\n Имя: {result['user_name']} \n Кредиты: {result['total_credits'] or 0} \n Страховки: {result['total_insurance'] or 0} \n Коробочные страхования: {result['box_insurance']} \n Звонки: {result["total_client_calls"] or 0} \n Дебетовые карты: {result['total_deb_cards'] or 0} \n Кредитные карты: {result["total_credit_cards"] or 0} \n Инвестиционное страхование жизни: {result["total_investition_insurance"] or 0}'''
-                premium = await count_premium(result)
-                result_answer += f'\n Полученная премия +{premium} рублей \n'
+            for result in sorted_users:
+                result_answer += f'''\n Топ {result['rank']} \n Имя: {result['user_name']} \n Кредиты: {result['total_credits'] or 0} \n Страховки: {result['total_insurance'] or 0} \n Коробочные страхования: {result['box_insurance']} \n Звонки: {result["total_client_calls"] or 0} \n Дебетовые карты: {result['total_deb_cards'] or 0} \n Кредитные карты: {result["total_credit_cards"] or 0} \n Инвестиционное страхование жизни: {result["total_investition_insurance"] or 0}'''
+                result_answer += f'\n Полученная премия +{result['premium']} рублей \n'
             if not result_answer:
                 result_answer = 'Нет данных за указанный период.'
 
