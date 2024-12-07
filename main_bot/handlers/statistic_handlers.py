@@ -31,9 +31,12 @@ async def get_statistic(callback: CallbackQuery, state: FSMContext):
     await state.update_data(period = callback.data)
     data = await state.get_data()
     
-    result = ''
+    results = []
     if data['noun'] == 'self':
         result = await get_user_sells_statistic(int(data['period']), user_tg_id= str(callback.from_user.id))
+        results.append(result)
     else:
         result = await get_all_sells_statistic(int(data['period']))
-    await callback.message.answer(result)
+        results.extend(result)
+    for answer in results:
+        await callback.message.answer(answer)

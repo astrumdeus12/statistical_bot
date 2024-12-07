@@ -71,6 +71,6 @@ async def make_sell(message: Message, state: FSMContext):
         await state.clear()
         await message.answer('Вы добавили продажу. \nСоверишть новую продажу: /make_sell или выберите тип продажи выше.')
     except ValidationError:
-        await message.answer('Вы ввели неверный тип данных, начните оформление продажи занова нажав /make_sell')
+        await message.answer('Вы ввели неверный тип данных, начните оформление продажи заново нажав /make_sell')
     except IntegrityError:
         await message.answer('Для совершения продаж зарегистрируйтесь: /registrate')

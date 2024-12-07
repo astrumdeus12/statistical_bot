@@ -9,4 +9,3 @@ async def create_user(username: str, phone_number: str, tg_id:str):
             session.add(new_user)
             await session.commit()
         
-        

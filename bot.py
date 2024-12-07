@@ -1,15 +1,10 @@
 import asyncio
 import logging
-from aiogram.client.default import DefaultBotProperties
-from aiogram.enums import ParseMode
-from aiogram import Bot, Dispatcher
-
 from main_bot.handlers.main_handlers import registrate_router
 from main_bot.handlers.sell_handlers import sell_router
 from main_bot.handlers.statistic_handlers import statistic_router
-from config import TOKEN_BOT
+from config import bot, dp
 
-bot = Bot(token=TOKEN_BOT, default=DefaultBotProperties(parse_mode=ParseMode.HTML))
 
 
 
@@ -17,12 +12,12 @@ bot = Bot(token=TOKEN_BOT, default=DefaultBotProperties(parse_mode=ParseMode.HTM
 
 async def main() -> None:
     
-    dp = Dispatcher()
+    
 
     dp.include_router(registrate_router)
     dp.include_router(sell_router)
     dp.include_router(statistic_router)
-
+    
     await dp.start_polling(bot)
     
 

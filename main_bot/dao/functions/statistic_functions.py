@@ -59,8 +59,10 @@ async def get_user_sells_statistic(days:int, user_tg_id:str):
             if result_period:
                 result.update({k: getattr(result_period, k) for k in result_period._mapping})
                 result['total_credit_count'] = credits_count.total_credit_count if credits_count else 0
+                print(credits_count, credits_count is None)
+                print(result['total_credit_count'])
             else:
-                result = {'user_name': 'Нет данных', 'total_credits': 0, 'total_insurance': 0, 'box_insurance': 0, 'total_client_calls':0, 'total_deb_cards': 0, 'total_credit_cards': 0, 'total_investition_insurance': 0, 'period_credit_count': 0, 'month_credit_count': 0}
+                result = {'user_name': 'Нет данных', 'total_credits': 0, 'total_insurance': 0, 'box_insurance': 0, 'total_client_calls':0, 'total_deb_cards': 0, 'total_credit_cards': 0, 'total_investition_insurance': 0, 'period_credit_count': 0, 'total_credit_count': 0}
 
 
             if result:
@@ -114,15 +116,16 @@ async def get_all_sells_statistic(days:int):
             credits_count = user_credits_count_month.fetchall()
             
             results = []
-            
+            print(period_result)
             for user in period_result:
                 result = {}
                 result.update({k: getattr(user, k) for k in user._mapping})
+                result['total_credit_count'] = 0
                 for counts in credits_count:
+                    print(counts.total_credit_count)
                     if counts.user_tg_id == result['user_tg_id']:
-                        result['total_credit_count'] = counts.total_credit_count
-                    else:
-                        result['total_credit_count'] = 0
+                        result['total_credit_count'] = counts.total_credit_count 
+                print(result)
                 result['premium'] = await count_premium(result)
                 results.append(result)
                 
@@ -133,11 +136,20 @@ async def get_all_sells_statistic(days:int):
                 
                 
             result_answer = ''
+            second_result_answer = ''
             for result in sorted_users:
-                result_answer += f'''\n Топ {result['rank']} \n Имя: {result['user_name']} \n Кредиты: {result['total_credits'] or 0} \n Страховки: {result['total_insurance'] or 0} \n Коробочные страхования: {result['box_insurance']} \n Звонки: {result["total_client_calls"] or 0} \n Дебетовые карты: {result['total_deb_cards'] or 0} \n Кредитные карты: {result["total_credit_cards"] or 0} \n Инвестиционное страхование жизни: {result["total_investition_insurance"] or 0}'''
-                result_answer += f'\n Полученная премия +{result['premium']} рублей \n'
+                if result['rank'] < 10:
+                    result_answer += f'''\n Топ {result['rank']} \n Имя: {result['user_name']} \n Кредиты: {result['total_credits'] or 0} \n Страховки: {result['total_insurance'] or 0} \n Коробочные страхования: {result['box_insurance']} \n Звонки: {result["total_client_calls"] or 0} \n Дебетовые карты: {result['total_deb_cards'] or 0} \n Кредитные карты: {result["total_credit_cards"] or 0} \n Инвестиционное страхование жизни: {result["total_investition_insurance"] or 0}'''
+                    result_answer += f'\n Полученная премия +{result['premium']} рублей \n'
+                else:
+                    second_result_answer += f'''\n Топ {result['rank']} \n Имя: {result['user_name']} \n Кредиты: {result['total_credits'] or 0} \n Страховки: {result['total_insurance'] or 0} \n Коробочные страхования: {result['box_insurance']} \n Звонки: {result["total_client_calls"] or 0} \n Дебетовые карты: {result['total_deb_cards'] or 0} \n Кредитные карты: {result["total_credit_cards"] or 0} \n Инвестиционное страхование жизни: {result["total_investition_insurance"] or 0}'''
+                    second_result_answer += f'\n Полученная премия +{result['premium']} рублей \n'
+            total_answer = [] 
             if not result_answer:
                 result_answer = 'Нет данных за указанный период.'
+            if second_result_answer:
+                total_answer.append(second_result_answer)
+            total_answer.append(result_answer)
 
             await session.commit()
-            return result_answer
+            return total_answer
